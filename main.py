@@ -8,8 +8,22 @@ def main() -> None:
         data = json.load(file)
 
     for player in data:
-        Player.objects.create(nickname=player)
-        
+        Player.objects.create(
+            nickname=player,
+            email=player["email"],
+            bio=player["bio"],
+            race=Race.objects.create(
+                name=player["race"]["name"],
+                description=player["race"]["description"]
+            ),
+            guild=Guild.objects.create(
+                name=player["guild"]["name"],
+                description=player["guild"]["description"]
+            ),
+
+        )
+
+
 
 
 if __name__ == "__main__":
