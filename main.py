@@ -5,10 +5,10 @@ from db.models import Race, Skill, Player, Guild
 
 def main() -> None:
     with open("players.json", "r", encoding="utf-8") as file:
-        data = json.load(file)
+        players_data = json.load(file)
 
-    for nickname, player in data.items():
-        race_data = player["race"]
+    for nickname, player_data in players_data.items():
+        race_data = player_data["race"]
         race, _ = Race.objects.get_or_create(
             name=race_data["name"],
             defaults={"description": race_data["description"]},
@@ -20,17 +20,18 @@ def main() -> None:
                 defaults={"bonus": skill_data["bonus"], "race": race},
             )
 
-        guild_data = player["guild"]
+        guild_data = player_data["guild"]
         guild = None
-        if guild_data:
+        if guild_data is not None:
             guild, _ = Guild.objects.get_or_create(
                 name=guild_data["name"],
                 defaults={"description": guild_data["description"]},
             )
+
         Player.objects.create(
             nickname=nickname,
-            email=player["email"],
-            bio=player["bio"],
+            email=player_data["email"],
+            bio=player_data["bio"],
             race=race,
             guild=guild,
         )
